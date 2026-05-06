@@ -1,4 +1,6 @@
-# svg2mp4 — Convert Animated SVG to MP4 Video
+# svg2mp4
+
+> Convert Animated SVG to MP4 Video
 
 A Python CLI tool that renders animated SVGs into MP4 video files or PNG frame sequences.
 
