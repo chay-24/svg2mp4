@@ -56,13 +56,9 @@ def resolve_smil(root, t):
     """
     Bake SMIL animation state at time t into the DOM.
 
-    Excalidraw exports multiple chained <animate> elements per attribute,
-    ordered latest-begin-first in the document.  When all animations for an
-    attribute have completed (elapsed >= dur, fill="freeze") we must apply
-    only the one whose begin time is the greatest (the most recent step),
-    because that carries the final intended value.  Applying them in document
-    order leaves the attribute set to the earliest step's "to" — usually the
-    starting (invisible/collapsed) state, which is why only the top border appeared.
+    When multiple chained <animate> elements target the same attribute and all
+    have completed (elapsed >= dur, fill="freeze"), apply only the one with the
+    greatest begin time — that carries the final intended value.
     """
     from collections import defaultdict
 
@@ -354,12 +350,8 @@ def patch_fonts(root) -> None:
 def fix_nested_svg_overflow(root):
     """
     cairosvg clips nested <svg> elements to their width/height exactly.
-    Excalidraw wraps each shape in a nested <svg> whose dimensions match
-    the shape's fill bounding box — excluding the stroke width on the outer
-    edges.  Because cairosvg honours overflow:hidden on nested SVGs, only
-    the portion inside the tiny viewport renders (typically just the top
-    stroke).  Setting overflow="visible" on every nested <svg> disables
-    that clipping and lets all four sides render correctly.
+    Setting overflow="visible" on every nested <svg> disables that clipping
+    so strokes on outer edges render correctly.
     """
     for el in root.iter():
         # lxml yields comment/PI nodes whose .tag is a callable, not a string
